@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>California Attractions</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<style>:root{--primary-color:#FF982B;--secondary-color:#66D6DF;--accent-color:#FFD300;--text-color:#282828;--bg-color:radial-gradient(circle at 25% 15%,rgba(255,154,139,0.1)5%,transparent20%),radial-gradient(circle at 75% 85%,rgba(126,214,223,0.15)5%,transparent20%),radial-gradient(circle at 85% 25%,rgba(254,228,64,0.1)5%,transparent20%);--card-bg:rgba(255,199,193,0.95);}@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");*{box-sizing:border-box;}body{font-family:"Nunito",sans-serif;margin:0;padding:0;background-color:var(--bg-color);background-image:var(--bg-color);color:var(--text-color);line-height:1.6;max-width:1200px;margin:0 auto;padding:20px;}h1{text-align:center;color:var(--primary-color);margin:30px 0;font-weight:700;font-size:2.8rem;text-shadow:3px 3px 0px var(--accent-color);letter-spacing:1px;animation:bounce 2s ease infinite;}@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}.attractions-container{perspective:1000px;}.card{background-color:var(--card-bg);padding:25px;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.08);margin:30px 0;transition:all 0.3s ease;display:flex;flex-direction:column;border-top:5px solid var(--secondary-color);position:relative;overflow:hidden;}.card::before{content:"";position:absolute;width:100px;height:100px;border-radius:50%;background-color:var(--accent-color);opacity:0.1;top:-50px;right:-50px;}.card:hover{transform:translateY(-8px);box-shadow:0 12px 20px rgba(0,0,0,0.1);}.card:nth-of-type(1){border-top-color:var(--primary-color);}.card:nth-of-type(2){border-top-color:var(--secondary-color);}.card:nth-of-type(3){border-top-color:var(--accent-color);}.card h3{color:var(--secondary-color);margin-top:0;font-size:1.8rem;position:relative;display:inline-block;}.card h3::after{content:"";position:absolute;bottom:-5px;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--accent-color),transparent);}.card p{margin-bottom:25px;font-size:1.1rem;line-height:1.7;}.attraction-image{width:100%;height:250px;object-fit:cover;border-radius:15px;margin-top:auto;transition:all 0.3s ease;filter:saturate(1.2);box-shadow:0 5px 15px rgba(0,0,0,0.1);}.card:hover .attraction-image{transform:scale(1.01);}#map{width:100%;height:400px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,0.15);}@media(min-width:768px){.attractions-container{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;}.card{margin:0;height:100%;}}}</style>
+</head>
+<body>
+<h1>California Attractions</h1>
+<div class="attractions-container">
+<section class="card">
+<h3>Santa Monica Pier</h3>
+<p>The Santa Monica Pier is a historic pier located in Santa Monica, California, that extends into the Pacific Ocean. It is a popular tourist destination and home to the Pacific Park amusement park, as well as the Santa Monica Pier Aquarium.</p>
+<script>
+fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent("Santa Monica pier")}&per_page=1`,{headers:{Authorization:"f2DoT820yfAEUep863NswR0yu0MSjBjGjLhE756VzqpIdaVmnaUmBUa9"}}).then(r=>r.json()).then(data=>{document.querySelectorAll('.card img')[0].src=data.photos[0].src.large;});
+</script>
+<img src="" class="attraction-image" alt="Santa Monica Pier" />
+</section>
+<section class="card">
+<h3>Yosemite National Park</h3>
+<p>Yosemite National Park is a national park located in eastern California, known for its granite cliffs, waterfalls, giant sequoia groves, and diverse wildlife. It is one of the most iconic and scenic national parks in the United States.</p>
+<script>
+fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent("Yosemite National Park")}&per_page=1`,{headers:{Authorization:"f2DoT820yfAEUep863NswR0yu0MSjBjGjLhE756VzqpIdaVmnaUmBUa9"}}).then(r=>r.json()).then(data=>{document.querySelectorAll('.card img')[1].src=data.photos[0].src.large;});
+</script>
+<img src="" class="attraction-image" alt="Yosemite National Park" />
+</section>
+<section class="card">
+<h3>Golden Gate Bridge</h3>
+<p>The Golden Gate Bridge is a suspension bridge located in San Francisco, California, that spans the Golden Gate strait. It is one of the most iconic landmarks in the world and a symbol of San Francisco and the San Francisco Bay Area.</p>
+<script>
+fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent("Golden Gate Bridge")}&per_page=1`,{headers:{Authorization:"f2DoT820yfAEUep863NswR0yu0MSjBjGjLhE756VzqpIdaVmnaUmBUa9"}}).then(r=>r.json()).then(data=>{document.querySelectorAll('.card img')[2].src=data.photos[0].src.large;});
+</script>
+<img src="" class="attraction-image" alt="Golden Gate Bridge" />
+</section>
+</div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+window.addEventListener("load",()=>{
+const map=L.map("map").setView([37.7749,-122.4194],9);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&#169; OpenStreetMap contributors"}).addTo(map);
+const attractionNames=["Santa Monica Pier","Yosemite National Park","Golden Gate Bridge"],bounds=L.latLngBounds();
+attractionNames.forEach((name,i)=>{
+const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(name)}`+`&email=your-email@example.com`;
+fetch(url).then(r=>r.json()).then(results=>{
+if(!results.length)return;
+const{lat,lon}=results[0],latlng=L.latLng(parseFloat(lat),parseFloat(lon));
+L.marker(latlng).addTo(map).bindPopup(name);
+bounds.extend(latlng);
+map.fitBounds(bounds,{padding:[50,50]});
+}).catch(err=>console.error("Geocoding error for",name,err));
+});
+});
+</script>
+</body>
+</html>
